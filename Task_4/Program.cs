@@ -8,82 +8,57 @@
 // 26(1,0,1) 55(1,1,1)
 
 
-using System; // директива препроцессора для подключения пространства имен System.
 
-class Program // определение класса Program.
+int InputNum(string message) // Метод запроса размера массива.
 {
-    static void Main() // точка входа в программу.
+    Console.Write(message);
+    return int.Parse(Console.ReadLine()!);
+}
+int[,,] Create3DArray(int size)  // Метод создания массива.
+{
+    int[,,] array = new int[size, size, size]; // Создание трехмерного массива с размером size в каждом измерении.
+    List<int> usedNumbers = new List<int>();  // Создание списка для хранения использованных чисел.
+
+    Random rnd = new Random(); // Создание объекта Random для генерации случайных чисел.
+
+    for (int i = 0; i < size; i++) // Цикл по первому измерению массива.
     {
-        // Создание трехмерного массива размером 2x2x2
-        int[,,] array = Create3DArray(2, 2, 2);
-
-        // Вывод трехмерного массива на консоль
-        Print3DArray(array);
-    }
-
-    static int[,,] Create3DArray(int rows, int cols, int depth)
-    {
-        // Создание трехмерного массива заданного размера
-        int[,,] array = new int[rows, cols, depth];
-
-        // Создание объекта для генерации случайных чисел
-        Random rnd = new Random();
-
-        // Заполнение трехмерного массива случайными числами
-        for (int i = 0; i < rows; i++)
+        for (int j = 0; j < size; j++)  // Цикл по второму измерению массива.
         {
-            for (int j = 0; j < cols; j++)
+            for (int k = 0; k < size; k++) // // Цикл по третьему измерению массива.
             {
-                for (int k = 0; k < depth; k++)
+                int number;   // Объявление переменной для хранения случайного числа.
+                do
                 {
-                    int num;
-                    do
-                    {
-                        // Генерация случайного числа от 10 до 99
-                        num = rnd.Next(10, 100);
-                    } while (IsNumberUsed(array, num));
+                    number = rnd.Next(10, 100);  // Генерация случайного числа от 10 до 99
+                } while (usedNumbers.Contains(number));  // Проверка, содержит ли список уже сгенерированное число.
 
-                    // Присвоение сгенерированного числа элементу массива
-                    array[i, j, k] = num;
-                }
+                array[i, j, k] = number;  // Присвоение сгенерированного числа элементу массива.
+                usedNumbers.Add(number);  // Добавление сгенерированного числа в список использованных чисел.
             }
         }
-
-        // Возвращение заполненного трехмерного массива
-        return array;
     }
 
-    static bool IsNumberUsed(int[,,] array, int num)
-    {
-        // Проверка, встречается ли число в трехмерном массиве
-        foreach (int element in array)
-        {
-            if (element == num)
-            {
-                return true;
-            }
-        }
+    return array;  // Возврат трехмерного массива.
+}
 
-        return false;
-    }
-
-    static void Print3DArray(int[,,] array)
+void Print3DArray(int[,,] array) // Метод Print3DArray, который принимает трехмерный массив в качестве аргумента и не возвращает значения.
+{
+    for (int i = 0; i < array.GetLength(0); i++) // Цикл по первому измерению массива.
     {
-        // Вывод трехмерного массива на консоль
-        for (int i = 0; i < array.GetLength(0); i++)
+        for (int j = 0; j < array.GetLength(1); j++) // Цикл по второму измерению массива.
         {
-            for (int j = 0; j < array.GetLength(1); j++)
+            for (int k = 0; k < array.GetLength(2); k++) // Цикл по третьему измерению массива.
             {
-                for (int k = 0; k < array.GetLength(2); k++)
-                {
-                    // Вывод значения элемента массива и его индексов
-                    Console.Write($"{array[i, j, k]}({i},{j},{k})\t");
-                }
-                Console.WriteLine();
+                Console.Write($"{array[i, j, k]}({i},{j},{k})\t");  // Вывод значения элемента массива и его индексов.
             }
-            
+            Console.WriteLine();
         }
+        
     }
 }
 
+int size = InputNum("Введите размер трёхмерного массива: ");
 
+int[,,] myArray = Create3DArray(size);
+Print3DArray(myArray);
